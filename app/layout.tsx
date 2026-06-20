@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "@/components/ui/themes";
-
 import "./globals.css";
+import Navbar from "@/components/ui/navbar";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="min-h-screen">
+            <Navbar />
+            <main className="py-8">
+              {/*container to center the content */}
+              <div className="max-w-7xl mx-auto px-4">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  <div className="hidden lg:block lg:cols-span-3">
+                    sidebar
+                  </div>
+                  <div className="lg-cols-span-9">{children}</div>
+                </div>
+              </div>
+            </main>
+          </div>
         </ThemeProvider>
       </body>
     </html>

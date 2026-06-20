@@ -76,10 +76,10 @@ export default function SignUp() {
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none animate-pulse delay-700"></div>
 
       <div className="relative w-full max-w-md bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl flex flex-col transition-all duration-300 hover:border-white/15">
-        
+
         {/* Header */}
         <div className="flex flex-col items-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-4">
+          <div className="w-12 h-12 rounded-xl bg-linear-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-4">
             <span className="font-black text-xl tracking-wider">T</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white/90">Create an account</h1>
@@ -134,7 +134,7 @@ export default function SignUp() {
 
           <button
             type="submit"
-            className="w-full mt-2 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold rounded-xl text-sm transition duration-200 shadow-md cursor-pointer hover:shadow-indigo-500/10"
+            className="w-full mt-2 py-2.5 bg-linear-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold rounded-xl text-sm transition duration-200 shadow-md cursor-pointer hover:shadow-indigo-500/10"
           >
             Sign Up
           </button>
