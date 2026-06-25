@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "@/components/ui/themes";
 import "./globals.css";
 import Navbar from "@/components/ui/navbar";
+import { AuthProvider } from "@/context/Authcontext";
+
 
 
 const geistSans = Geist({
@@ -42,11 +44,15 @@ export default function RootLayout({
             <main className="py-8">
               {/*container to center the content */}
               <div className="max-w-7xl mx-auto px-4">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  <div className="hidden lg:block lg:cols-span-3">
+                <div className="grid grid-col-1 lg:grid-col-12 gap-6">
+                  <div className="hidden lg:block lg:col-span-3">
                     sidebar
                   </div>
-                  <div className="lg-cols-span-9">{children}</div>
+                  <div className="lg-col-span-10">
+                    <AuthProvider>
+                      {children}
+                    </AuthProvider>
+                  </div>
                 </div>
               </div>
             </main>
