@@ -11,7 +11,7 @@ export default function Navbar() {
             <Link href="/" className="text-xl font-bold text-primary font-mono tracking-wider">Timber</Link>
           </div>
           <DesktopNavbar />
-          {/* <MobileNavbar /> */}
+          <MobileNavbar />
         </div>
       </div>
     </nav>

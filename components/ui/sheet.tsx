@@ -15,12 +15,12 @@ function Sheet({ ...props }: SheetPrimitive.Root.Props) {
 }
 
 const SheetTrigger = React.forwardRef<
-  React.ElementRef<typeof SheetPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Trigger>
+  HTMLElement,
+  SheetPrimitive.Trigger.Props
 >(({ ...props }, ref) => (
-  <SheetPrimitive.Trigger ref={ref} {...props} />
+  <SheetPrimitive.Trigger ref={ref as any} {...props} />
 ))
-SheetTrigger.displayName = SheetPrimitive.Trigger.displayName
+SheetTrigger.displayName = "SheetTrigger"
 
 function SheetClose({ ...props }: SheetPrimitive.Close.Props) {
   return <SheetPrimitive.Close data-slot="sheet-close" {...props} />
