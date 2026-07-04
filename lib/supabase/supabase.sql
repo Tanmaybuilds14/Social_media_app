@@ -40,3 +40,11 @@ Create table public.follows(
   created_at timestamp with time zone default timezone('utc'::text, now())
   constraint check_not_self check(follower_id <> following_id)
 )
+
+create table public.comments(
+  id uuid primary key default gen_random_uuid(),
+  post_id uuid refrences public.posts(id) on delete cascade not null,
+  user_id text references public.users(id) on delete cascade not null,
+  content text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) 
+)
