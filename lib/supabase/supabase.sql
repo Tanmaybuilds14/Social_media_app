@@ -39,6 +39,7 @@ Create table public.follows(
   following_id text references public.users(id) on delete cascade not null,
   created_at timestamp with time zone default timezone('utc'::text, now())
   constraint check_not_self check(follower_id <> following_id)
+  create index follows_id on public.follows([follower_id,following_id])
 )
 
 create table public.comments(
