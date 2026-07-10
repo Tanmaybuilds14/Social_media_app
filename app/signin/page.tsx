@@ -65,7 +65,7 @@ export default function SignIn() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white dark:bg-zinc-950 border-2 border-black dark:border-white rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]">
+      <div className="max-w-md w-full bg-white dark:bg-black border border-black dark:border-gray-700 l p-8">
         <h2 className="text-3xl font-black text-black dark:text-white mb-6 text-center uppercase tracking-wider">Sign In</h2>
 
         {error && (

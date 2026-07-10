@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "@/components/ui/themes";
 import "./globals.css";
 import Navbar from "@/components/ui/navbar";
+import Sidebar from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/Authcontext";
 
 
@@ -47,7 +48,7 @@ export default function RootLayout({
               <div className="max-w-7xl mx-auto px-4">
                 <div className="grid grid-col-1 lg:grid-col-12 gap-6">
                   <div className="hidden lg:block lg:col-span-3">
-                    sidebar
+                    <Sidebar />
                   </div>
                   <div className="lg-col-span-10">
                     <AuthProvider>

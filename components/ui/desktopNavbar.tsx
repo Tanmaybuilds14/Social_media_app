@@ -45,7 +45,7 @@ function DesktopNavbar() {
         ) :
         (
           <Button variant="default" asChild>
-            <Link href="/signup">Sign in</Link>
+            <Link href="/signin">Sign in</Link>
           </Button>
         )}
     </div>

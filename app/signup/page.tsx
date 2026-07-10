@@ -6,58 +6,121 @@ import Link from "next/link";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, googleProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from "@/lib/Firebase";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
 
 export default function SignUp() {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const supabase = createClient();
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSigning, setIsSigning] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user && !isSigning) {
         router.push("/");
-      } else {
+      } else if (!user) {
         setLoading(false);
       }
     });
     return () => unsubscribe();
   }, [router]);
 
-  const handleEmailSignUp = async (e: React.FormEvent) => {
+  const handleEmailSignUp = async (e: React.SubmitEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setIsSigning(true);
+
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // Set the display name
-      if (userCredential.user) {
-        await updateProfile(userCredential.user, {
-          displayName: name,
-        });
+      //check if username already taken
+      const { data: usernameCheck } = await supabase
+        .from("users")
+        .select("username")
+        .eq("username", userName.toLowerCase().trim())
+        .maybeSingle();
+
+      if (usernameCheck) {
+        throw new Error("This username is already taken")
       }
+      //user creation in database
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      const firebaseUser = userCredential.user;
+
+      //user data redirection in supabase
+      const { error } = await supabase
+        .from("users")
+        .insert([
+          {
+            id: firebaseUser.uid, // Use the Firebase UID as the primary key
+            email: firebaseUser.email,
+            username: userName.toLowerCase().trim(),
+          }
+        ])
+
+      if (error) {
+        // Handle unique constraint errors (e.g., username already taken)
+        throw new Error(error.message);
+      }
+
+      setIsSigning(false);
       router.push("/");
+
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to create account.");
       setLoading(false);
+      setIsSigning(false)
     }
+
+
   };
 
   const handleGoogleSignIn = async () => {
+
     setLoading(true);
     setError(null);
+
     try {
-      await signInWithPopup(auth, googleProvider);
-      router.push("/");
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Failed to sign in with Google.");
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user
+
+      //existing user check
+      const { data: existingUser } = await supabase
+        .from("users")
+        .select("id")
+        .eq("id", user.uid)
+        .maybeSingle();
+
+      if (!existingUser) {
+        // Safely grab the first part of their email for a unique username
+        const emailPrefix = user.email?.split("@")[0] || "user";
+        const generatedUsername = `${emailPrefix}${Math.floor(1000 + Math.random() * 9000)}`;
+
+        const { error: insertError } = await supabase.from("users").insert({
+          id: user.uid,
+          email: user.email!,
+          username: generatedUsername.toLowerCase(),
+          name: user.displayName || "New User",
+          image: user.photoURL || ""
+        });
+
+        if (insertError) {
+          throw insertError;
+        }
+        router.push("/")
+      }
+    } catch (error: any) {
+      console.error("Google Sign-In failed:", error);
+      setError(error.message || "Failed to sign in with Google.");
       setLoading(false);
     }
-  };
+
+  }
 
   if (loading) {
     return (
@@ -72,7 +135,7 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white dark:bg-zinc-950 border-2 border-black dark:border-white rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]">
+      <div className="max-w-md w-full bg-white dark:bg-black border border-black dark:border-gray-700 l p-8">
         <h2 className="text-3xl font-black text-black dark:text-white mb-6 text-center uppercase tracking-wider">Create Account</h2>
 
         {error && (
@@ -84,14 +147,14 @@ export default function SignUp() {
 
         <form onSubmit={handleEmailSignUp} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-black dark:text-white uppercase tracking-widest mb-1">Full Name</label>
+            <label className="block text-xs font-bold text-black dark:text-white uppercase tracking-widest mb-1"> userName</label>
             <input
               type="text"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
               className="w-full px-4 py-2 border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white rounded-none focus:outline-none focus:bg-zinc-50 dark:focus:bg-zinc-900 transition-all font-mono"
-              placeholder="John Doe"
+              placeholder="JohnDoe2353"
             />
           </div>
 
